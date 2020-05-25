@@ -1,0 +1,25 @@
+server:
+  port: 8090
+
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    password: ''
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DB_CLOSE_ON_EXIT=FALSE;INIT=CREATE SCHEMA IF NOT EXISTS TEST
+    username: sa
+  jpa:
+    properties:
+      hibernate:
+        cache:
+          use_query_cache: false
+          use_second_level_cache: false
+        default_batch_fetch_size: 16
+        dialect: org.hibernate.dialect.PostgreSQL95Dialect
+        format_sql: true
+        hbm2ddl:
+          auto: create-drop
+        order_updates: true
+        query:
+          jpaql_strict_compliance: false
+        show_sql: false
+        use_sql_comments: false

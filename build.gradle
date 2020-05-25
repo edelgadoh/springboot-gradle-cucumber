@@ -1,0 +1,67 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenLocal()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.3.0.RELEASE")
+        classpath("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2")
+        classpath("io.spring.gradle:dependency-management-plugin:1.0.9.RELEASE")
+    }
+}
+
+apply plugin: 'java-library'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+apply plugin: 'org.sonarqube'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'jacoco'
+apply plugin: 'application'
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
+mainClassName = 'com.example.App'
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+ext {
+    wiremockVersion = '2.26.0'
+    lombokVersion = '1.18.6'
+    cucumberVersion = '5.7.0'
+}
+
+dependencies {
+    compileOnly("org.projectlombok:lombok:${lombokVersion}")
+    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+    implementation('org.springframework.boot:spring-boot-starter-web')
+    implementation('org.springframework.boot:spring-boot-starter-actuator')
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    compile('org.postgresql:postgresql:42.2.12')
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation("com.github.tomakehurst:wiremock-jre8:${wiremockVersion}")
+    testRuntimeOnly('com.h2database:h2')
+    testImplementation('org.springframework.cloud:spring-cloud-contract-wiremock:1.2.5.RELEASE')
+    testImplementation("io.cucumber:cucumber-java:${cucumberVersion}")
+    testImplementation("io.cucumber:cucumber-junit:${cucumberVersion}")
+    testImplementation("io.cucumber:cucumber-spring:${cucumberVersion}")
+    testCompileOnly("org.projectlombok:lombok:1.18.6")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.6")
+
+}
+
+test {
+    maxHeapSize = "512m"
+    reports.junitXml.enabled = false
+    reports.html.enabled = false
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
